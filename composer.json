@@ -2,7 +2,7 @@
     "name": "nineteenfeet/nf-number-to-word",
     "description": "ZF2 view helper to convert a number into its word representation. e.g. 1 => one",
     "keywords": [
-        "number", "word", "conversion"
+        "number", "word", "conversion, zf2, zend, zend-framework, view-helper, view"
     ],
     "homepage": "http://github.com/nineteenfeet/NFNumberToWord",
     "type": "library",
