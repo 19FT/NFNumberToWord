@@ -7,17 +7,61 @@ use Exception;
 
 class Module extends AbstractHelper
 {
+    protected $dictionary  = array(
+        0                   => 'zero',
+        1                   => 'one',
+        2                   => 'two',
+        3                   => 'three',
+        4                   => 'four',
+        5                   => 'five',
+        6                   => 'six',
+        7                   => 'seven',
+        8                   => 'eight',
+        9                   => 'nine',
+        10                  => 'ten',
+        11                  => 'eleven',
+        12                  => 'twelve',
+        13                  => 'thirteen',
+        14                  => 'fourteen',
+        15                  => 'fifteen',
+        16                  => 'sixteen',
+        17                  => 'seventeen',
+        18                  => 'eighteen',
+        19                  => 'nineteen',
+        20                  => 'twenty',
+        30                  => 'thirty',
+        40                  => 'forty',
+        50                  => 'fifty',
+        60                  => 'sixty',
+        70                  => 'seventy',
+        80                  => 'eighty',
+        90                  => 'ninety',
+        100                 => 'hundred',
+        1000                => 'thousand',
+        1000000             => 'million',
+        1000000000          => 'billion',
+        1000000000000       => 'trillion',
+        1000000000000000    => 'quadrillion',
+        1000000000000000000 => 'quintillion'
+    );
+    
+
     public function getViewHelperConfig()
     {
         return array('services' => array('numberToWord' => $this));
     }
 
-    public function __invoke($number)
+    public function __invoke($number, $titleCase = false)
     {
-        return $this->convert_number_to_words($number);
+        $dictionary = $this->dictionary;
+        if ($titleCase) {
+            array_walk($dictionary, function(&$item, $key) {$item = ucfirst($item);});
+        }
+
+        return $this->convert_number_to_words($number, $dictionary);
     }
 
-    function convert_number_to_words($number)
+    function convert_number_to_words($number, $dictionary)
     {
         // From: http://www.karlrixon.co.uk/writing/convert-numbers-to-words-with-php/
 
@@ -26,43 +70,6 @@ class Module extends AbstractHelper
         $separator   = ', ';
         $negative    = 'negative ';
         $decimal     = ' point ';
-        $dictionary  = array(
-            0                   => 'zero',
-            1                   => 'one',
-            2                   => 'two',
-            3                   => 'three',
-            4                   => 'four',
-            5                   => 'five',
-            6                   => 'six',
-            7                   => 'seven',
-            8                   => 'eight',
-            9                   => 'nine',
-            10                  => 'ten',
-            11                  => 'eleven',
-            12                  => 'twelve',
-            13                  => 'thirteen',
-            14                  => 'fourteen',
-            15                  => 'fifteen',
-            16                  => 'sixteen',
-            17                  => 'seventeen',
-            18                  => 'eighteen',
-            19                  => 'nineteen',
-            20                  => 'twenty',
-            30                  => 'thirty',
-            40                  => 'forty',
-            50                  => 'fifty',
-            60                  => 'sixty',
-            70                  => 'seventy',
-            80                  => 'eighty',
-            90                  => 'ninety',
-            100                 => 'hundred',
-            1000                => 'thousand',
-            1000000             => 'million',
-            1000000000          => 'billion',
-            1000000000000       => 'trillion',
-            1000000000000000    => 'quadrillion',
-            1000000000000000000 => 'quintillion'
-        );
         
         if (!is_numeric($number)) {
             return false;
@@ -77,7 +84,7 @@ class Module extends AbstractHelper
         }
 
         if ($number < 0) {
-            return $negative . $this->convert_number_to_words(abs($number));
+            return $negative . $this->convert_number_to_words(abs($number), $dictionary);
         }
         
         $string = $fraction = null;
@@ -103,17 +110,17 @@ class Module extends AbstractHelper
                 $remainder = $number % 100;
                 $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
                 if ($remainder) {
-                    $string .= $conjunction . $this->convert_number_to_words($remainder);
+                    $string .= $conjunction . $this->convert_number_to_words($remainder, $dictionary);
                 }
                 break;
             default:
                 $baseUnit = pow(1000, floor(log($number, 1000)));
                 $numBaseUnits = (int) ($number / $baseUnit);
                 $remainder = $number % $baseUnit;
-                $string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
+                $string = $this->convert_number_to_words($numBaseUnits, $dictionary) . ' ' . $dictionary[$baseUnit];
                 if ($remainder) {
                     $string .= $remainder < 100 ? $conjunction : $separator;
-                    $string .= $this->convert_number_to_words($remainder);
+                    $string .= $this->convert_number_to_words($remainder, $dictionary);
                 }
                 break;
         }
