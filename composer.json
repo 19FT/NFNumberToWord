@@ -1,6 +1,6 @@
 {
     "name": "nineteenfeet/nf-number-to-word",
-    "description": "Convert a number into its word representation. e.g. 1 => one",
+    "description": "ZF2 view helper to convert a number into its word representation. e.g. 1 => one",
     "keywords": [
         "number", "word", "conversion"
     ],
