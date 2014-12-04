@@ -55,13 +55,15 @@ class Module extends AbstractHelper
     {
         $dictionary = $this->dictionary;
         if ($titleCase) {
-            array_walk($dictionary, function(&$item, $key) {$item = ucfirst($item);});
+            array_walk($dictionary, function (&$item, $key) {
+                $item = ucfirst($item);
+            });
         }
 
-        return $this->convert_number_to_words($number, $dictionary);
+        return $this->convertNumbersToWords($number, $dictionary);
     }
 
-    function convert_number_to_words($number, $dictionary)
+    public function convertNumbersToWords($number, $dictionary)
     {
         // From: http://www.karlrixon.co.uk/writing/convert-numbers-to-words-with-php/
 
@@ -78,13 +80,13 @@ class Module extends AbstractHelper
         if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
             // overflow
             throw new Exception(
-                'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX
+                'convertNumbersToWords only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX
             );
             return false;
         }
 
         if ($number < 0) {
-            return $negative . $this->convert_number_to_words(abs($number), $dictionary);
+            return $negative . $this->convertNumbersToWords(abs($number), $dictionary);
         }
         
         $string = $fraction = null;
@@ -110,17 +112,17 @@ class Module extends AbstractHelper
                 $remainder = $number % 100;
                 $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
                 if ($remainder) {
-                    $string .= $conjunction . $this->convert_number_to_words($remainder, $dictionary);
+                    $string .= $conjunction . $this->convertNumbersToWords($remainder, $dictionary);
                 }
                 break;
             default:
                 $baseUnit = pow(1000, floor(log($number, 1000)));
                 $numBaseUnits = (int) ($number / $baseUnit);
                 $remainder = $number % $baseUnit;
-                $string = $this->convert_number_to_words($numBaseUnits, $dictionary) . ' ' . $dictionary[$baseUnit];
+                $string = $this->convertNumbersToWords($numBaseUnits, $dictionary) . ' ' . $dictionary[$baseUnit];
                 if ($remainder) {
                     $string .= $remainder < 100 ? $conjunction : $separator;
-                    $string .= $this->convert_number_to_words($remainder, $dictionary);
+                    $string .= $this->convertNumbersToWords($remainder, $dictionary);
                 }
                 break;
         }
@@ -136,5 +138,4 @@ class Module extends AbstractHelper
         
         return $string;
     }
-
 }
