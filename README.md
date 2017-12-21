@@ -1,18 +1,22 @@
 NFNumberToWord
 ==============
 
-This ZF2 module provides a view helper called *numberToWord* which will
-format a numberic number (e.g. 1023) as a word (e.g. one thousand and twenty three).
+This component provides a means to convert  numberic number (e.g. `1023`) to a string of works (e.g. `one thousand and twenty three`). It also provides a zend-view helper called *numberToWord*.
 
 
-##Installation with Composer
+## Installation with Composer
 
-1. Add `"nineteenfeet/nf-number-to-word": "1.*"` to your `composer.json` file and run `php composer.phar update`.
-2. Add `'NFNumberToWord'` to your list of modules in `application.config.php`.
+    $ composer require "nineteenfeet/nf-number-to-word"
 
 
 ## Usage
 
-In your view script:
+```php
+use NFNumberToWord\NumberToWords;
 
-    <?php echo $this->numberToWord(1234, $titleCase = true); ?>
+$number = 1999;
+
+$numberToWords = new NumberToWords();
+$string = $numberToWords->toWords($number);
+```
+
