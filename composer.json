@@ -19,7 +19,8 @@
     },
     "autoload": {
         "classmap": [
-            "./Module.php"
+            "./Module.php",
+            "./NumberToWords.php"
         ]
     }
 }
