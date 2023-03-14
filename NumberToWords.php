@@ -101,7 +101,7 @@ class NumberToWords
                 }
                 break;
             case $number < 1000:
-                $hundreds  = $number / 100;
+                $hundreds  = (int) floor($number / 100);
                 $remainder = $number % 100;
                 $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
                 if ($remainder) {
