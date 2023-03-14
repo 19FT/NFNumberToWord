@@ -75,7 +75,6 @@ class NumberToWords
             throw new RuntimeException(
                 'convertNumbersToWords only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX
             );
-            return false;
         }
 
         if ($number < 0) {
