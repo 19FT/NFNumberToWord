@@ -1,7 +1,7 @@
 NFNumberToWord
 ==============
 
-This component provides a means to convert  numberic number (e.g. `1023`) to a string of works (e.g. `one thousand and twenty three`). It also provides a zend-view helper called *numberToWord*.
+This component provides a means to convert  numeric number (e.g. `1023`) to a string of works (e.g. `one thousand and twenty three`). It also provides a laminas-view helper called *numberToWord*.
 
 
 ## Installation with Composer
