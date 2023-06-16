@@ -2,7 +2,7 @@
     "name": "nineteenfeet/nf-number-to-word",
     "description": "Convert a number into its word representation. e.g. 1 => one",
     "keywords": [
-        "number", "word", "conversion", "view-helper", "view"
+        "number", "word", "conversion"
     ],
     "homepage": "http://github.com/nineteenfeet/NFNumberToWord",
     "type": "library",
@@ -15,11 +15,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=8.1"
     },
     "autoload": {
         "classmap": [
-            "./Module.php",
             "./NumberToWords.php"
         ]
     }
