@@ -1,0 +1,35 @@
+name: Release
+
+# On push of version number tag, this workflow will:
+# - Close the milestone of the same name (if it exists)
+# - Create a GitHub release
+
+
+on:
+  push:
+    tags:
+      - '[0-9].*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Close Milestone
+        uses: adlerhsieh/prepare-release@0.1.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: 19FT
+          REPO: NFNumberToWord
+          IGNORE_MILESTONE_NOT_FOUND: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: ${{ steps.builder.outputs.workflow_file }}
