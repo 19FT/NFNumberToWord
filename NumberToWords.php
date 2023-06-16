@@ -1,11 +1,13 @@
 <?php
-namespace NFNumberToWord;
 
-use RuntimeException;
+namespace NFNumberToWord;
 
 class NumberToWords
 {
-    protected $dictionary  = array(
+    /**
+     * @var array|string[]
+     */
+    protected array $dictionary  = array(
         0                   => 'zero',
         1                   => 'one',
         2                   => 'two',
@@ -43,12 +45,11 @@ class NumberToWords
         1000000000000000000 => 'quintillion'
     );
 
-
-    public function toWords($number, $titleCase = false)
+    public function toWords(mixed $number, bool $titleCase = false): string|false
     {
         $dictionary = $this->dictionary;
         if ($titleCase) {
-            array_walk($dictionary, function (&$item, $key) {
+            array_walk($dictionary, static function (&$item) {
                 $item = ucfirst($item);
             });
         }
@@ -56,7 +57,10 @@ class NumberToWords
         return $this->convertNumbersToWords($number, $dictionary);
     }
 
-    private function convertNumbersToWords($number, $dictionary = null)
+    /**
+     * @param String[] $dictionary
+     */
+    private function convertNumbersToWords(mixed $number, array $dictionary): string|false
     {
         // From: http://www.karlrixon.co.uk/writing/convert-numbers-to-words-with-php/
 
@@ -70,22 +74,17 @@ class NumberToWords
             return false;
         }
 
-        if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
-            // overflow
-            throw new RuntimeException(
-                'convertNumbersToWords only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX
-            );
-        }
-
         if ($number < 0) {
             return $negative . $this->convertNumbersToWords(abs($number), $dictionary);
         }
 
-        $string = $fraction = null;
+        $fraction = null;
 
-        if (strpos($number, '.') !== false) {
-            list($number, $fraction) = explode('.', $number);
+        if (str_contains((string)$number, '.')) {
+            [$number, $fraction] = explode('.', (string)$number);
+            $fraction = (int)$fraction;
         }
+        $number = (int)$number;
 
         switch (true) {
             case $number < 21:
@@ -108,7 +107,7 @@ class NumberToWords
                 }
                 break;
             default:
-                $baseUnit = pow(1000, floor(log($number, 1000)));
+                $baseUnit = 1000 ** floor(log($number, 1000));
                 $numBaseUnits = (int) ($number / $baseUnit);
                 $remainder = $number % $baseUnit;
                 $string = $this->convertNumbersToWords($numBaseUnits, $dictionary) . ' ' . $dictionary[$baseUnit];
@@ -119,11 +118,11 @@ class NumberToWords
                 break;
         }
 
-        if (null !== $fraction && is_numeric($fraction)) {
+        if (is_numeric($fraction)) {
             $string .= $decimal;
             $words = array();
-            foreach (str_split((string) $fraction) as $number) {
-                $words[] = $dictionary[$number];
+            foreach (str_split((string) $fraction) as $n) {
+                $words[] = $dictionary[$n];
             }
             $string .= implode(' ', $words);
         }

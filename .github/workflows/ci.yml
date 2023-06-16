@@ -1,0 +1,47 @@
+name: "PHPUnit tests"
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  ci:
+    name: "CI checks"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+          coverage: none
+          tools: composer:v2
+
+      - name: "Cache dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: "php-8.2"
+          restore-keys: "php-8.2"
+
+      - name: "Install dependencies"
+        run: "composer update --no-interaction --no-progress --no-suggest"
+
+      - name: "Lint"
+        run: ./vendor/bin/phplint NumberToWords.php test
+
+      - name: "PHPCS"
+        run: ./vendor/bin/phpcs
+
+      - name: "PHPStan"
+        run: ./vendor/bin/phpstan --configuration=phpstan.neon
+
+      - name: "PHPUnit"
+        run: ./vendor/bin/phpunit
