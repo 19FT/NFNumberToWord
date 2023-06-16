@@ -16,23 +16,27 @@ jobs:
           fetch-depth: 0
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
+        uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
           coverage: none
           tools: composer:v2
 
-      - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+      - name: "Get Composer Cache Directory"
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: "Cache Composer"
+        uses: actions/cache@v3
         with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "php-8.2"
-          restore-keys: "php-8.2"
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: "Install dependencies"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: composer install --no-progress
 
       - name: "Lint"
         run: ./vendor/bin/phplint NumberToWords.php test
