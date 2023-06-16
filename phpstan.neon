@@ -1,0 +1,6 @@
+parameters:
+  parallel:
+    maximumNumberOfProcesses: 4
+  paths:
+    - NumberToWords.php
+  level: max
