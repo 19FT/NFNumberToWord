@@ -75,7 +75,7 @@ class NumberToWords
         }
 
         if ($number < 0) {
-            return $negative . $this->convertNumbersToWords(abs($number), $dictionary);
+            return $negative . $this->convertNumbersToWords(abs((float)$number), $dictionary);
         }
 
         $fraction = null;
